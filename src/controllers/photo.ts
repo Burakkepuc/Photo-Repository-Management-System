@@ -10,10 +10,8 @@ interface AuthenticatedRequest extends ExpressRequest {
 }
 
 var s3 = new aws.S3({
-  // accessKeyId: process.env.AWS_ACCESS_KEY_ID,
-  accessKeyId: 'AKIAXYKJS3WAPIO32TD6',
-  secretAccessKey: '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',
-  // secretAccessKey: process.env.AWS_SECRET_KEY_ID,
+  accessKeyId: process.env.AWS_ACCESS_KEY_ID,
+  secretAccessKey: process.env.AWS_SECRET_KEY_ID,
   region: process.env.AWS_REGION,
 });
 
@@ -37,8 +35,8 @@ export const uploadPhoto = async (req: AuthenticatedRequest, res: Response) => {
         res.status(500).json({message: err.message});
       }
 
-      await fs.promises.unlink(file.path); // Delete the file from the server
-      const userId = req.userId; // Ensure req.userId is defined and valid
+      await fs.promises.unlink(file.path);
+      const userId = req.userId;
 
       //success
       if (data) {
@@ -46,7 +44,7 @@ export const uploadPhoto = async (req: AuthenticatedRequest, res: Response) => {
           filename: file.originalname || file.filename,
           uploadDate: Date.now(),
           s3Url: data.Location,
-          userId: new mongoose.Types.ObjectId(userId), // Replace with actual user ID
+          userId: new mongoose.Types.ObjectId(userId),
         });
 
         try {
